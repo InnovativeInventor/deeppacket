@@ -29,19 +29,17 @@ def main():
         protocol = "https://"
 
     links = random_links(protocol)
-    time.sleep(2)
-    process = tcpdump()
-    time.sleep(3)
+    
+    if len(links) > 1:
+        time.sleep(2)
+        process = tcpdump()
+        time.sleep(3)
 
+        if "openvpn" in sys.argv[1]:
+            connect_openvpn()
 
-    if "openvpn" in sys.argv[1]:
-        connect_openvpn()
-        
-
-    if not os.path.isdir(sys.argv[1]):
-        os.makedirs(sys.argv[1])
-
-    if len(links) > 2:
+        if not os.path.isdir(sys.argv[1]):
+            os.makedirs(sys.argv[1])
         visit_links(links,protocol)
     else:
         main()

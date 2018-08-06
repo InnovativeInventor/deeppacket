@@ -28,7 +28,9 @@ def grab_data_modified_keras(file):
             data_array.append(len(packet))
             prev_packet_time = packet.time
     
+    # Should not be needed
     while len(data_array) < 100:
+        print("Warning: " + file + " has less than 50 packets and was padded.")
         data_array.append(0)
     
     numpy_array = np.asarray(data_array)
