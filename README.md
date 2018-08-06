@@ -4,9 +4,14 @@ Build:
 docker build -t deeppacket .
 ```
 
-Run:
+Train:
 ```
-python3 discriminate.py regular openvpn regular_eval openvpn_eval
+python3 discriminate_keras.py data/https data/openvpn data/https_eval data/openvpn_eval
+```
+
+Train in background:
+```
+nohup python3 discriminate_keras.py data/https data/openvpn data/https_eval data/openvpn_eval & disown
 ```
 
 ## Dependecies 
@@ -15,7 +20,12 @@ python3 discriminate.py regular openvpn regular_eval openvpn_eval
 
 Tested with Python 3.6.6
 
-## Training in background with nohup
+## Gathering data
+Make sure you have the aws cli set up and access to the s3 bucket named `deeppacket.homelabs.space`. Run `scripts/grab_data.sh`
+
 ```
-nohup python3 discriminate_keras.py https openvpn https_eval openvpn_eval & disown
+Note: This may be a requester-pays bucket in the future.
 ```
+
+Split the http, https, and openvpn data into the training data and evaulation data (this can be randomly done).
+
