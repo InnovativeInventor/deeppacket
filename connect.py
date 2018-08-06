@@ -22,15 +22,6 @@ def main():
         raise ValueError("Arguments are 'openvpn' or a folder name.")
 
     print("Option selected: " + sys.argv[1])
-
-    if "openvpn" in sys.argv[1]:
-        process = tcpdump()
-        time.sleep(5)
-        connect_openvpn()
-        time.sleep(25)
-        process.terminate()
-        openvpn_terminate()
-        os._exit(0) 
     
     if "http" in sys.argv[1]:
         protocol = "http://"
@@ -40,15 +31,27 @@ def main():
     links = random_links(protocol)
     time.sleep(2)
 
+
+    if "openvpn" in sys.argv[1]:
+        process = tcpdump()
+        time.sleep(5)
+        connect_openvpn()
+        time.sleep(25)
+        
+
     if not os.path.isdir(sys.argv[1]):
         os.makedirs(sys.argv[1])
 
     if len(links) >= 1:
         process = tcpdump()
         visit_links(links,protocol)
-        process.terminate()
+        
     else:
         main()
+    
+    process.terminate()
+    openvpn_terminate()
+    os._exit(0)
 
 def openvpn_terminate():
     subprocess.run(["tc", "qdisc", "del", "dev", "eth0", "root"])

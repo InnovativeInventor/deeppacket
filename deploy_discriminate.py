@@ -1,5 +1,7 @@
 from keras.models import load_model
 import sys
+from scapy.all import *
+import numpy as np
 
 ## Usage python3 deploy_discriminate.py [model location] [pcap file]
 ## Example python3 deploy_discriminate.py try_1.h5 ../../openvpn/9ceb86bcee0f50cd.pcap
@@ -27,7 +29,12 @@ def grab_data_modified_keras(file):
 
 def run_prediction():
     formatted_data = grab_data_modified_keras(sys.argv[2])
-    prediction = model.predict(formatted_data)
+    print(formatted_data.shape)
+    sized_data = np.expand_dims(formatted_data, axis=1)
+    final_data = np.expand_dims(sized_data, axis=0)
+    print(sized_data.shape)
+    print(final_data.shape)
+    prediction = model.predict(final_data)
     print(prediction)
 
 if __name__ == "__main__":
