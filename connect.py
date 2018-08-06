@@ -41,9 +41,8 @@ def main():
     if not os.path.isdir(sys.argv[1]):
         os.makedirs(sys.argv[1])
 
-    if len(links) >= 1:
+    if len(links) > 2:
         visit_links(links,protocol)
-        
     else:
         main()
     
