@@ -30,20 +30,18 @@ def main():
 
     links = random_links(protocol)
     time.sleep(2)
+    process = tcpdump()
+    time.sleep(3)
 
 
     if "openvpn" in sys.argv[1]:
-        process = tcpdump()
-        time.sleep(5)
         connect_openvpn()
-        time.sleep(25)
         
 
     if not os.path.isdir(sys.argv[1]):
         os.makedirs(sys.argv[1])
 
     if len(links) >= 1:
-        process = tcpdump()
         visit_links(links,protocol)
         
     else:
@@ -67,7 +65,7 @@ def connect_openvpn():
     subprocess.run(["tc", "qdisc", "add", "dev", "eth0", "root", "netem", "delay", delay, "1ms", "distribution", "normal"])
     time.sleep(2)
     # subprocess.run(["ping", "-c", "10", "google.com"]) # Debug
-    subprocess.Popen(["openvpn", "--config", "client.ovpn"])
+    subprocess.run(["openvpn", "--config", "client.ovpn", "--daemon"])
 
 
 def tcpdump():
