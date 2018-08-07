@@ -130,6 +130,7 @@ def model_keras():
     plt.legend(['train', 'validation'], loc='upper left')
     plt.savefig("accuracy.png")
     plt.gcf().clear()
+    
     # summarize history for loss
     plt.plot(history.history['loss'])
     plt.plot(history.history['val_loss'])
