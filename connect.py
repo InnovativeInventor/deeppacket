@@ -49,6 +49,7 @@ def main():
     os._exit(0)
 
 def openvpn_terminate():
+    subprocess.run(["killall", "openvpn"])
     subprocess.run(["tc", "qdisc", "del", "dev", "eth0", "root"])
     # subprocess.run(["ping", "-c", "10", "google.com"]) # Debug
 

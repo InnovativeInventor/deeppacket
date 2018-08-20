@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     python3 \
     openvpn \
+    psmisc \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install beautifulsoup4 requests validators

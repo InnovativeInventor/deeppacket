@@ -1,3 +1,3 @@
 source activate tensorflow_p36
 pip install tqdm scapy
-nohup python3 discriminate_keras.py https openvpn https_eval openvpn_eval & disown
+nohup python3 discriminate_keras.py data/https data/openvpn data/https_eval data/openvpn_eval & disown
