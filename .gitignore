@@ -1,4 +1,5 @@
 client.ovpn
+server.pem
 data/*
 
 .DS_Store

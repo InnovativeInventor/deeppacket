@@ -13,10 +13,12 @@ from keras.layers import Activation, Dropout, Flatten, Dense, LSTM
 from keras import backend as K
 import matplotlib.pyplot as plt
 import functools
+import os
 
 @functools.lru_cache()
-def grab_data_modified_keras(file):
-    raw = rdpcap(file)
+def grab_data_modified_keras(files: tuple):
+    choosen_file = secrets.choice(files)
+    raw = rdpcap(choosen_file)
     data_array = []
     for idx, packet in enumerate(raw):
         if len(data_array) is not 100:
@@ -29,15 +31,19 @@ def grab_data_modified_keras(file):
             prev_packet_time = packet.time
     
     # Should not be needed
-    while len(data_array) < 100:
-        print("Warning: " + file + " has less than 50 packets and was padded.")
-        data_array.append(0)
-    
-    numpy_array = np.asarray(data_array)
+    if len(data_array) < 100:
+        print("Warning: " + choosen_file + " has less than 50 packets and was skipped and removed.")
+        os.remove(choosen_file)
+        files_list = list(files)
+        files_list.remove(choosen_file)
+        numpy_array = grab_data_modified_keras(tuple(files_list))
+    else:
+        numpy_array = np.asarray(data_array)
+
     return numpy_array
     
 
-def data_yield(batch_size, https,vpn):
+def data_yield(batch_size: int, https: str, vpn: str):
     """
     Should spit out a dictionary for the labels and a list of the training/eval data
     This code is messy, but will do.
@@ -48,10 +54,9 @@ def data_yield(batch_size, https,vpn):
         label = []
         data_size = 0
         for i in range(batch_size):
-
             coin_flip = secrets.choice(folder_list)
-            folder_files = glob.glob(coin_flip+"/*.pcap")
-            data_unorganized = grab_data_modified_keras(secrets.choice(folder_files))
+            folder_tuple = tuple(glob.glob(coin_flip+"/*.pcap"))
+            data_unorganized = grab_data_modified_keras(folder_tuple)
             data_swapped = np.swapaxes(np.expand_dims(data_unorganized, axis=0),0,1)
             data_flipped = np.swapaxes(data_swapped,1,0)
             data.append(data_flipped)
