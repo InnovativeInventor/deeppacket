@@ -16,7 +16,7 @@ Supported protocols:
 """
 
 
-def main():
+def main(links=[]):
     if len(sys.argv) < 2:
         print("Error invalid blank argument")
         raise ValueError("Arguments are 'openvpn' or a folder name.")
@@ -28,9 +28,13 @@ def main():
     else:
         protocol = "https://"
 
-    links = random_links(protocol)
-    
-    if len(links) > 1:
+    if links == []:
+        links = random_links(protocol)
+    else:
+        links.extend(random_links(protocol))
+
+    print(links)
+    if len(links) > 2:
         time.sleep(2)
         process = tcpdump()
         time.sleep(3)
@@ -40,9 +44,10 @@ def main():
 
         if not os.path.isdir(sys.argv[1]):
             os.makedirs(sys.argv[1])
+
         visit_links(links,protocol)
     else:
-        main()
+        main(links)
     
     process.terminate()
     openvpn_terminate()
@@ -80,9 +85,9 @@ def random_links(protocol):
     links = soup.find_all('a', href=True)
     for result in links:
         url = result['href']
-        if validators.url(url) and protocol and "wiki" not in url:
+        if validators.url(url) and protocol in url and "wiki" not in url:
             try:
-                requests.get(url, timeout=3)
+                requests.get(url, timeout=5)
                 ext_links.append(url)
             except:
                 pass
@@ -91,9 +96,9 @@ def random_links(protocol):
     
 def visit_links(links, protocol):
     for each_link in links:
-        if protocol in each_link:
-            print(each_link)
-            requests.get(each_link) # Only needs to be the length of a vpn handshake
+        # if protocol in each_link:
+        print(each_link)
+        requests.get(each_link) # Only needs to be the length of a vpn handshake
 
 
 if __name__ == "__main__":
